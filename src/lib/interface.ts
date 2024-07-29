@@ -23,3 +23,10 @@ export interface Pokemon {
     name: string
     url: string
 }
+
+// props interface
+export interface PaginationProps {
+    totalPages: number;
+    currentPage: number;
+    onPageChange: (pageNumber: number) => void;
+}
