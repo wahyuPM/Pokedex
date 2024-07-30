@@ -5,47 +5,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// utils.ts
-export const getTypeColorClass = (typeName: string): string => {
-  switch (typeName.toLowerCase()) {
-    case 'grass':
-      return 'bg-grass'; // Make sure to define this class in your Tailwind config
-    case 'fire':
-      return 'bg-fire';
-    case 'water':
-      return 'bg-water';
-    case 'bug':
-      return 'bg-bug';
-    case 'flying':
-      return 'bg-flying'
-    case 'normal':
-      return 'bg-normal'
-    case 'poison':
-      return 'bg-poison'
-    case 'electric':
-      return 'bg-electric'
-    case 'ground':
-      return 'bg-ground'
-    case 'fairy':
-      return 'bg-fairy'
-    case 'fighting':
-      return 'bg-fighting'
-    case 'psychic':
-      return 'bg-psychic'
-    case 'rock':
-      return 'bg-rock'
-    case 'ghost':
-      return 'bg-ghost'
-    case 'ice':
-      return 'bg-ice'
-    case 'dragon':
-      return 'bg-dragon'
-    case 'dark':
-      return 'bg-dark'
-    case 'steel':
-      return 'bg-steel'
-    // Add more type mappings as needed
-    default:
-      return 'bg-white dark:bg-gray-900';
+export const getGradientStyle = (types: { type: { name: string } }[]): React.CSSProperties => {
+  const baseColors: { [key: string]: string } = {
+    grass: '#5dbe6299',
+    fire: '#fc6c6d99',
+    water: '#60a5fa99',
+    bug: '#9dc13099',
+    flying: '#9bb4e899',
+    normal: '#9a9da180',
+    poison: '#b563ce99',
+    electric: '#edd53f99',
+    ground: '#d7855599',
+    fairy: '#ef97e680',
+    fighting: '#d9425699',
+    psychic: '#f8588899',
+    rock: '#c3b16299',
+    ghost: '#7975d499',
+    ice: '#98d8d880',
+    dragon: '#0773c799',
+    dark: '#5f606d99',
+    steel: '#b8b8d080'
+  };
+
+  if (types.length === 1) {
+    const typeName = types[0].type.name;
+    return { backgroundColor: baseColors[typeName] || '#ffffff' };
   }
+
+  if (types.length === 2) {
+    const [type1, type2] = types.map(type => type.type.name);
+    return {
+      background: `linear-gradient(to right bottom, ${baseColors[type1] || '#ffffff'} 30%, ${baseColors[type2] || '#ffffff'})`
+    };
+  }
+
+  return { backgroundColor: '#ffffff' }; // Default background
 };
