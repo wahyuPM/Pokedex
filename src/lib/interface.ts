@@ -30,3 +30,10 @@ export interface PaginationProps {
     currentPage: number;
     onPageChange: (pageNumber: number) => void;
 }
+
+export interface ComboboxProps {
+    setSelectedType: React.Dispatch<React.SetStateAction<string[]>>;
+    listData: { name: string, url: string }[]
+    selected: string[]
+    placeholder: string
+}

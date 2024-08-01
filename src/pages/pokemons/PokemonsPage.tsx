@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input"
 import CardComponent from '@/components/pokemon/CardComponent';
 import { Spinner } from '@/components/ui/spinner';
 import PaginationComponent from '@/components/pokemon/PaginationComponent';
+import Combobox from '@/components/ui/combobox';
 
 const PokemonsPage = () => {
     const [search, setSearch] = useState('');
     const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(12);
+    const [selectedType, setSelectedType] = useState<string[]>([])
     const inputRef = useRef<HTMLInputElement>(null);
 
     const [{ data, loading }, fetchData] = useFetch<PokemonList>({
@@ -20,9 +22,15 @@ const PokemonsPage = () => {
         url: 'https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'
     });
 
+    const [{ data: listType }, fetchListtype] = useFetch<any>({
+        method: 'GET',
+        url: 'https://pokeapi.co/api/v2/type'
+    });
+
     useEffect(() => {
         fetchData();
-    }, [fetchData]);
+        fetchListtype()
+    }, [fetchData, fetchListtype]);
 
     useEffect(() => {
         if (data?.results) {
@@ -72,6 +80,7 @@ const PokemonsPage = () => {
                         <div className='flex items-center gap-2'>
                             <Input className='w-1/4 dark:text-white' placeholder='🔎 Search Pokemon' ref={inputRef} onKeyDown={handleKeyDown} onChange={handleOnChange}
                             />
+                            <Combobox setSelectedType={setSelectedType} selected={selectedType} listData={listType?.results} placeholder='Select Pokemon Type' />
                         </div>
                     </div>
                     {loading && <div className='h-[80vh] flex items-center justify-center'>
