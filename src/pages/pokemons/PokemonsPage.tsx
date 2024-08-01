@@ -43,6 +43,14 @@ const PokemonsPage = () => {
         }
     };
 
+    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        if (event.target.value.length >= 3) {
+            setSearch(event.target.value);
+        } else if (event.target.value === '') {
+            setSearch('')
+        }
+    }
+
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
@@ -62,7 +70,7 @@ const PokemonsPage = () => {
                     <div className='flex flex-col gap-4'>
                         <h2 className='text-2xl font-semibold dark:text-white'>Pokemon Species</h2>
                         <div className='flex items-center gap-2'>
-                            <Input className='w-1/4' placeholder='🔎 Search Pokemon' ref={inputRef} onKeyDown={handleKeyDown}
+                            <Input className='w-1/4 dark:text-white' placeholder='🔎 Search Pokemon' ref={inputRef} onKeyDown={handleKeyDown} onChange={handleOnChange}
                             />
                         </div>
                     </div>

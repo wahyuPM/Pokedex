@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { FetchOptions, FetchState } from '@/lib/interface';
 
-const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<T>, () => void] => {
+const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<T>, () => Promise<void>] => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,7 @@ const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<
         }
     }, [url, method, body, headers]);
 
-    return [{ data, loading, error }, fetchData];
+    return [{ data, loading, error }, fetchData]; // can destructure this array and rename the variables and function for clarity and to avoid naming conflicts at the component
 };
 
 export default useFetch;
