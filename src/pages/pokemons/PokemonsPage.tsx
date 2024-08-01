@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 
 import useFetch from '@/hooks/useFetch';
-import { PokemonList, Pokemon } from '@/lib/interface';
+import { PokemonType, Pokemon } from '@/lib/interface';
 
 import { Input } from "@/components/ui/input"
 import CardComponent from '@/components/pokemon/CardComponent';
@@ -15,33 +15,62 @@ const PokemonsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(12);
     const [selectedType, setSelectedType] = useState<string[]>([])
+    const [url, setUrl] = useState<string[]>(['https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'])
+    const [pokemonsData, setPokemonsData] = useState<Pokemon[]>([]); // State to store combined Pokémon data
+    const [loading, setLoading] = useState<boolean>(false)
     const inputRef = useRef<HTMLInputElement>(null);
-
-    const [{ data, loading }, fetchData] = useFetch<PokemonList>({
-        method: 'GET',
-        url: 'https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'
-    });
 
     const [{ data: listType }, fetchListtype] = useFetch<any>({
         method: 'GET',
         url: 'https://pokeapi.co/api/v2/type'
     });
 
+    // Update URLs based on selected types
     useEffect(() => {
-        fetchData();
-        fetchListtype()
-    }, [fetchData, fetchListtype]);
+        if (selectedType.length === 0) {
+            setUrl(['https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0']);
+        } else {
+            setUrl(selectedType.map(type => `https://pokeapi.co/api/v2/type/${type}`));
+        }
+    }, [selectedType]);
+
+    // Fetch data for all URLs and combine results
+    useEffect(() => {
+        const fetchAllData = async () => {
+            try {
+                setLoading(true)
+                const allData = await Promise.all(url.map(url => fetch(url).then(res => res.json())));
+                if (selectedType.length === 0) {
+                    setPokemonsData(allData[0]?.results);
+                } else {
+                    const combinedData: Pokemon[] = allData.flatMap((data: PokemonType) => {
+                        return data?.pokemon?.map(({ pokemon }) => pokemon) ?? [];
+                    });
+                    setPokemonsData(combinedData);
+                }
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                console.error('Error fetching Pokémon data:', error);
+            }
+        };
+        fetchAllData();
+    }, [url, selectedType]);
 
     useEffect(() => {
-        if (data?.results) {
-            const copyData = data.results.map((item) => item);
+        fetchListtype()
+    }, [fetchListtype]);
+
+    useEffect(() => {
+        if (pokemonsData) {
+            const copyData = pokemonsData?.map((item) => item);
             const filtered = copyData.filter((pokemon: Pokemon) =>
                 pokemon.name.toLowerCase().includes(search.toLowerCase())
             );
             setFilteredPokemons(filtered);
             setCurrentPage(1);
         }
-    }, [data, search]);
+    }, [pokemonsData, search]);
 
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

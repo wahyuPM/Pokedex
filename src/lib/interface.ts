@@ -24,6 +24,12 @@ export interface Pokemon {
     url: string
 }
 
+export interface PokemonType {
+    pokemon: {
+        pokemon: Pokemon;
+    }[];
+}
+
 // props interface
 export interface PaginationProps {
     totalPages: number;

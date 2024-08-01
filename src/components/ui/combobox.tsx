@@ -23,8 +23,8 @@ import { ComboboxProps } from "@/lib/interface"
 const Combobox: React.FC<ComboboxProps> = ({ listData, setSelectedType, selected, placeholder = "Select some value..." }) => {
 
     const [open, setOpen] = useState(false)
-    // const [value, setValue] = useState<string[]>([])
-    const onHandleSelect = (currentValue) => {
+
+    const onHandleSelect = (currentValue: string) => {
         setSelectedType((prev: string[]) =>
             prev.includes(currentValue)
                 ? prev.filter((val) => val !== currentValue)
