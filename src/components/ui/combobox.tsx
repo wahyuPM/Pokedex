@@ -38,12 +38,12 @@ const Combobox: React.FC<ComboboxProps> = ({ listData, setSelectedType, selected
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-[300px] justify-between capitalize"
+                className="w-[300px] justify-between dark:text-white capitalize"
             >
                 {selected?.length > 0
                     ? selected?.map(val => listData?.find(item => item.name === val)?.name).join(', ')
                     : placeholder}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50 dark:text-white" />
             </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[300px] p-0">
