@@ -1,10 +1,13 @@
 import { useState, useCallback } from 'react';
 import { FetchOptions, FetchState } from '@/lib/interface';
+import { useToast } from "@/components/ui/use-toast"
 
 const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<T>, () => Promise<void>] => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+
+    const { toast } = useToast()
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -28,6 +31,11 @@ const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<
             setData(result);
         } catch (err: any) {
             setError(err.message);
+            toast({
+                variant: "destructive",
+                title: `Uh oh! Something went wrong.`,
+                description: err.message,
+            })
         } finally {
             setLoading(false);
         }

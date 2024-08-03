@@ -1,5 +1,5 @@
 import Logo from '@/assets/logo.png'
-import { Moon, Sun, LayoutDashboard, RefreshCcw } from "lucide-react"
+import { Moon, Sun, LayoutDashboard, RefreshCcw, Menu } from "lucide-react"
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -14,6 +14,14 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 import { useTheme } from "@/components/theme-provider"
 
 import { NavLink } from 'react-router-dom'
@@ -23,11 +31,11 @@ const NavComponent = () => {
     return (
         <nav className='w-full min-h-6 shadow-lg bg-white dark:bg-gray-950 dark:shadow-gray-800 fixed top-0 z-50'>
             <div className="container mx-auto">
-                <div className="flex gap-6 items-center py-4 px-2">
+                <div className="flex gap-1 xl:gap-6 items-center py-4 px-2">
                     {/* Logo */}
-                    <img src={Logo} alt="Pokemon" className='w-[130px] h-auto order-2 lg:order-1' />
+                    <img src={Logo} alt="Pokemon" className='w-[130px] h-auto' />
                     {/* Nav Menu */}
-                    <NavigationMenu className='order-1 lg:order-2'>
+                    <NavigationMenu className='hidden xl:block'>
                         <NavigationMenuList>
                             <NavigationMenuItem >
                                 <NavigationMenuTrigger className='dark:text-white'>Pokedex</NavigationMenuTrigger>
@@ -81,7 +89,7 @@ const NavComponent = () => {
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
-                    <div className="ml-auto order-3">
+                    <div className="ml-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="icon">
@@ -100,6 +108,22 @@ const NavComponent = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant="outline" size="icon" className='flex visible xl:hidden xl:invisible'>
+                                <Menu className='dark:text-white' />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent>
+                            <SheetHeader>
+                                <SheetTitle>Are you absolutely sure?</SheetTitle>
+                                <SheetDescription>
+                                    This action cannot be undone. This will permanently delete your account
+                                    and remove your data from our servers.
+                                </SheetDescription>
+                            </SheetHeader>
+                        </SheetContent>
+                    </Sheet>
                 </div>
             </div>
         </nav>

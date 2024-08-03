@@ -38,7 +38,7 @@ export interface PaginationProps {
 }
 
 export interface ComboboxProps {
-    setSelectedType: React.Dispatch<React.SetStateAction<string[]>>;
+    setSelectedType: (curentValue: string) => void
     listData: { name: string, url: string }[]
     selected: string[]
     placeholder: string

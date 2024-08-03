@@ -72,7 +72,9 @@ const PaginationComponent: React.FC<PaginationProps> = ({ currentPage, totalPage
                 {currentPage > 1 && <PaginationItem>
                     <PaginationPrevious href="#" onClick={() => onPageChange(currentPage - 1)} className='dark:text-white' />
                 </PaginationItem>}
-                {getPaginationItems()}
+                <div className='hidden invisible lg:flex lg:visible gap-1'>
+                    {getPaginationItems()}
+                </div>
                 {totalPages !== currentPage && <PaginationItem>
                     <PaginationNext href="#" onClick={() => onPageChange(currentPage + 1)} className='dark:text-white' />
                 </PaginationItem>}

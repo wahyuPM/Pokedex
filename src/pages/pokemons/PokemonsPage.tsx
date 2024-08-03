@@ -1,7 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 
 import useFetch from '@/hooks/useFetch';
 import { PokemonType, Pokemon } from '@/lib/interface';
+
+import { Inbox } from 'lucide-react';
 
 import { Input } from "@/components/ui/input"
 import CardComponent from '@/components/pokemon/CardComponent';
@@ -11,11 +13,10 @@ import Combobox from '@/components/ui/combobox';
 
 const PokemonsPage = () => {
     const [search, setSearch] = useState('');
-    const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(12);
     const [selectedType, setSelectedType] = useState<string[]>([])
-    const [url, setUrl] = useState<string[]>(['https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'])
+    const [url, setUrl] = useState<string[]>([])
     const [pokemonsData, setPokemonsData] = useState<Pokemon[]>([]); // State to store combined Pokémon data
     const [loading, setLoading] = useState<boolean>(false)
     const inputRef = useRef<HTMLInputElement>(null);
@@ -39,15 +40,16 @@ const PokemonsPage = () => {
         const fetchAllData = async () => {
             try {
                 setLoading(true)
+                let newData: Pokemon[] = [];
                 const allData = await Promise.all(url.map(url => fetch(url).then(res => res.json())));
                 if (selectedType.length === 0) {
-                    setPokemonsData(allData[0]?.results);
+                    newData = allData[0]?.results ?? []
                 } else {
-                    const combinedData: Pokemon[] = allData.flatMap((data: PokemonType) => {
+                    newData = allData.flatMap((data: PokemonType) => {
                         return data?.pokemon?.map(({ pokemon }) => pokemon) ?? [];
                     });
-                    setPokemonsData(combinedData);
                 }
+                setPokemonsData(newData)
                 setLoading(false)
             } catch (error) {
                 setLoading(false)
@@ -55,42 +57,49 @@ const PokemonsPage = () => {
             }
         };
         fetchAllData();
-    }, [url, selectedType]);
+    }, [url]);
 
     useEffect(() => {
         fetchListtype()
     }, [fetchListtype]);
 
-    useEffect(() => {
-        if (pokemonsData) {
-            const copyData = pokemonsData?.map((item) => item);
-            const filtered = copyData.filter((pokemon: Pokemon) =>
-                pokemon.name.toLowerCase().includes(search.toLowerCase())
-            );
-            setFilteredPokemons(filtered);
-            setCurrentPage(1);
-        }
+    // With useMemo: The filtering is only recalculated when pokemonData or search changes, reducing unnecessary computations and potentially improving performance.
+    const filteredPokemons = useMemo(() => {
+        return pokemonsData.filter((pokemon: Pokemon) =>
+            pokemon.name.toLowerCase().includes(search.toLowerCase())
+        );
     }, [pokemonsData, search]);
-
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            const searchValue = inputRef.current?.value || '';
-            setSearch(searchValue);
-        }
-    };
-
-    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        if (event.target.value.length >= 3) {
-            setSearch(event.target.value);
-        } else if (event.target.value === '') {
-            setSearch('')
-        }
-    }
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => { // define function type withot void, its optional
+        if (event.key === 'Enter') {
+            const searchValue = inputRef.current?.value || '';
+            setSearch(searchValue);
+            handlePageChange(1)
+        }
+    };
+
+    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => { // define function type with void, its optional
+        if (event.target.value.length >= 3) {
+            setSearch(event.target.value);
+            handlePageChange(1)
+        } else if (event.target.value === '') {
+            setSearch('')
+            handlePageChange(1)
+        }
+    }
+
+    const handleOnChangeType = (curentValue: string): void => {
+        handlePageChange(1)
+        setSelectedType((prev: string[]) =>
+            prev.includes(curentValue)
+                ? prev.filter((val) => val !== curentValue)
+                : [...prev, curentValue]
+        );
+    }
 
     const getPaginatedData = () => {
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -106,25 +115,35 @@ const PokemonsPage = () => {
                 <div className="grid grid-rows-1 auto-rows-auto gap-4">
                     <div className='flex flex-col gap-4'>
                         <h2 className='text-2xl font-semibold dark:text-white'>Pokemon Species</h2>
-                        <div className='flex items-center gap-2'>
-                            <Input className='w-1/4 dark:text-white' placeholder='🔎 Search Pokemon' ref={inputRef} onKeyDown={handleKeyDown} onChange={handleOnChange}
+                        <div className='flex flex-col md:flex-row items-center gap-2'>
+                            <Input className='w-full lg:w-[300px] dark:text-white' placeholder='🔎 Search Pokemon' ref={inputRef} onKeyDown={handleKeyDown} onChange={handleOnChange}
                             />
-                            <Combobox setSelectedType={setSelectedType} selected={selectedType} listData={listType?.results} placeholder='Select Pokemon Type' />
+                            <Combobox setSelectedType={handleOnChangeType} selected={selectedType} listData={listType?.results} placeholder='Select Pokemon Type' />
                         </div>
                     </div>
                     {loading && <div className='h-[80vh] flex items-center justify-center'>
                         <Spinner size="large"></Spinner>
                     </div>}
 
-                    {!loading && <div className='grid grid-cols-3 gap-3 auto-rows-[180px]'>
+                    {!loading && filteredPokemons?.length > 0 && <div className='grid grid-cols-2 md:grid-cols-3 gap-3 auto-rows-[250px] md:auto-rows-auto lg:auto-rows-[180px] min-h-[60vh] xl:min-h-[80vh]'>
                         {
-                            getPaginatedData().map((data: Pokemon, index: number) => (
-                                <CardComponent key={index} url={data.url} name={data.name} />
+                            getPaginatedData().map((data: Pokemon) => (
+                                <CardComponent key={data.name} url={data.url} name={data.name} />
                             ))
                         }
                     </div>
                     }
-                    <PaginationComponent currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                    {
+                        filteredPokemons.length === 0 && <div className='h-[80vh] flex items-center justify-center'>
+                            <div className='p-6 rounded-md bg-gray-100 dark:bg-gray-700 dark:text-white flex flex-col gap-2 items-center justify-center aspect-square'>
+                                <Inbox className='w-14 h-14' />
+                                No results found
+                            </div>
+                        </div>
+                    }
+                    {
+                        filteredPokemons.length > 0 && <PaginationComponent currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+                    }
                 </div>
             </div>
         </div>
