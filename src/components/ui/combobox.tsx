@@ -24,21 +24,13 @@ const Combobox: React.FC<ComboboxProps> = ({ listData, setSelectedType, selected
 
     const [open, setOpen] = useState(false)
 
-    const onHandleSelect = (currentValue: string) => {
-        setSelectedType((prev: string[]) =>
-            prev.includes(currentValue)
-                ? prev.filter((val) => val !== currentValue)
-                : [...prev, currentValue]
-        );
-    }
-
     return <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
             <Button
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-[300px] justify-between dark:text-white capitalize"
+                className="w-full lg:w-[300px] justify-between dark:text-white capitalize"
             >
                 {selected?.length > 0
                     ? selected?.map(val => listData?.find(item => item.name === val)?.name).join(', ')
@@ -58,8 +50,8 @@ const Combobox: React.FC<ComboboxProps> = ({ listData, setSelectedType, selected
                                 value={item.name}
                                 className="capitalize"
                                 disabled={selected?.length === 2 && !selected?.includes(item.name)}
-                                onSelect={selected?.length === 2 && !selected?.includes(item.name) ? () => { } : (currentValue) => {
-                                    onHandleSelect(currentValue)
+                                onSelect={selected?.length === 2 && !selected?.includes(item.name) ? () => { } : (currentValue: string) => {
+                                    setSelectedType(currentValue)
                                 }}
                             >
                                 <Check
