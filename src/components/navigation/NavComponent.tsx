@@ -42,9 +42,8 @@ const NavComponent = () => {
                                 <NavigationMenuContent>
                                     <ul className="grid w-[300px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                                         <li className="row-span-3">
-
                                             <NavLink
-                                                className={({ isActive }) => (isActive ? 'bg-gradient-to-b' : '') + ' flex h-full w-full select-none flex-col justify-end rounded-md hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md'}
+                                                className={({ isActive }) => (isActive ? 'bg-gradient-to-b' : '') + ' flex h-full w-full select-none flex-col justify-end rounded-md border dark:border-gray-600 hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md'}
                                                 to="/"
                                             >
                                                 <div className='flex items-center justify-between'>
@@ -58,14 +57,11 @@ const NavComponent = () => {
                                                     </div>
                                                     <LayoutDashboard />
                                                 </div>
-
                                             </NavLink>
-
                                         </li>
                                         <li className="row-span-3">
-
                                             <NavLink
-                                                className="flex h-full w-full select-none flex-col justify-end rounded-md hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md"
+                                                className="flex h-full w-full select-none flex-col justify-end rounded-md border dark:border-gray-600 hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md"
                                                 to="/"
                                             >
                                                 <div className='flex items-center justify-between'>
@@ -79,16 +75,14 @@ const NavComponent = () => {
                                                     </div>
                                                     <RefreshCcw />
                                                 </div>
-
                                             </NavLink>
-
                                         </li>
-
                                     </ul>
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
+
                     <div className="ml-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -108,6 +102,7 @@ const NavComponent = () => {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
+
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button variant="outline" size="icon" className='flex visible xl:hidden xl:invisible'>
@@ -116,12 +111,49 @@ const NavComponent = () => {
                         </SheetTrigger>
                         <SheetContent>
                             <SheetHeader>
-                                <SheetTitle>Are you absolutely sure?</SheetTitle>
+                                <SheetTitle>Pokedex</SheetTitle>
                                 <SheetDescription>
-                                    This action cannot be undone. This will permanently delete your account
-                                    and remove your data from our servers.
+
                                 </SheetDescription>
                             </SheetHeader>
+                            <ul className='flex flex-col gap-2'>
+                                <li className="">
+                                    <NavLink
+                                        className={({ isActive }) => (isActive ? 'bg-gradient-to-b' : '') + ' flex h-full w-full select-none flex-col justify-end dark:text-white rounded-md border dark:border-gray-600 hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md'}
+                                        to="/"
+                                    >
+                                        <div className='flex items-center justify-between'>
+                                            <div className="flex flex-col">
+                                                <div className="text-sm font-medium leading-none">
+                                                    Pokemon
+                                                </div>
+                                                <p className="text-sm leading-tight text-muted-foreground">
+                                                    Pokemon List
+                                                </p>
+                                            </div>
+                                            <LayoutDashboard />
+                                        </div>
+                                    </NavLink>
+                                </li>
+                                <li className="">
+                                    <NavLink
+                                        className="flex h-full w-full select-none flex-col justify-end dark:text-white rounded-md border dark:border-gray-600 hover:bg-gradient-to-b from-gray-50 dark:from-gray-800 to-gray-100 dark:to-gray-900 p-6 no-underline outline-none focus:shadow-md"
+                                        to="/"
+                                    >
+                                        <div className='flex items-center justify-between'>
+                                            <div className="flex flex-col">
+                                                <div className="text-sm font-medium leading-none">
+                                                    Evolutions
+                                                </div>
+                                                <p className="text-sm leading-tight text-muted-foreground">
+                                                    Pokemon Evolutions
+                                                </p>
+                                            </div>
+                                            <RefreshCcw />
+                                        </div>
+                                    </NavLink>
+                                </li>
+                            </ul>
                         </SheetContent>
                     </Sheet>
                 </div>

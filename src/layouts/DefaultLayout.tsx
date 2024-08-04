@@ -7,7 +7,7 @@ const DefaultLayout = () => {
     return (
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <Toaster />
-            <div className='bg-white dark:bg-gray-950 relative'>
+            <div className='bg-white dark:bg-gray-950 relative min-h-screen'>
                 <NavComponent />
                 <main className="pt-[80px]">
                     <Outlet />
