@@ -41,7 +41,7 @@ const Combobox: React.FC<ComboboxProps> = ({ listData, setSelectedType, selected
         <PopoverContent className="w-[300px] p-0">
             <Command>
                 <CommandInput placeholder={placeholder} />
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup>
                     <CommandList>
                         {listData?.map((item) => (

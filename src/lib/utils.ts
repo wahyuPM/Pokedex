@@ -42,3 +42,7 @@ export const getGradientStyle = (types: { type: { name: string } }[]): React.CSS
 
   return { backgroundColor: '#ffffff' }; // Default background
 };
+
+export const formatNumber = (number: number, length: number) => {
+  return number.toString().padStart(length, '0');
+}

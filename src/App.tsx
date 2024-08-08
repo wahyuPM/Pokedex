@@ -6,6 +6,7 @@ import {
 import './App.css'
 import DefaultLayout from "./layouts/DefaultLayout";
 import PokemonsPage from "./pages/pokemons/PokemonsPage";
+import DetailPage from "./pages/pokemons/DetailPage";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <PokemonsPage />
+      },
+      {
+        path: ':pokemonName',
+        element: <DetailPage />
       }
     ]
   },

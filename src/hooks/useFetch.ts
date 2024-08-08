@@ -24,7 +24,7 @@ const useFetch = <T>({ method, url, body, headers }: FetchOptions): [FetchState<
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`Network response was not ok, with status ${response.status}`);
             }
 
             const result = await response.json();
