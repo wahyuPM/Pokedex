@@ -124,7 +124,18 @@ const DetailPage = () => {
                                 }
                             </div>
                         </div>
-                        <div>Pokemon Image</div>
+                        <div className="flex items-center p-6 relative">
+                            {/* start: atomic animation */}
+                            <div className="border-2 border-[#D7D7EB] flex items-center justify-center rounded-full relative before:content-[''] before:absolute before:w-[20px] before:h-[20px] before:bg-water before:rounded-full before:-top-[30px] w-full aspect-square animate-orbit-1">
+                                <div className="border-2 border-[#D7D7EB] flex items-center justify-center rounded-full relative before:content-[''] before:absolute before:w-[20px] before:h-[20px] before:bg-fire before:rounded-full before:-top-[30px] w-[calc(100%-120px)] aspect-square animate-orbit-2">
+                                    <div className="border-2 border-[#D7D7EB] flex items-center justify-center rounded-full relative before:content-[''] before:absolute before:w-[20px] before:h-[20px] before:bg-electric before:rounded-full before:-top-[30px] w-[calc(100%-120px)] aspect-square animate-orbit-3">
+
+                                    </div>
+                                </div>
+                            </div>
+                            {/* end: atomic animation */}
+                            <img src={data?.sprites.other['official-artwork']?.front_default} alt={data?.sprites.other['official-artwork']?.front_default} className='z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-xl aspect-square w-[342px]' />
+                        </div>
                         <div>Pokemon Height, Weight and abilities</div>
                     </div>
                 </div>
