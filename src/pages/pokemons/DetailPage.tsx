@@ -14,6 +14,8 @@ import { IoWater } from "react-icons/io5";
 import { LuMountain } from "react-icons/lu";
 import { BsFillNutFill } from "react-icons/bs";
 import { WiMoonAltWaxingCrescent2 } from "react-icons/wi"
+import { CiLineHeight } from "react-icons/ci";
+import { RiWeightLine } from "react-icons/ri";
 
 const DetailPage = () => {
     const { pokemonName } = useParams()
@@ -124,7 +126,7 @@ const DetailPage = () => {
                                 }
                             </div>
                         </div>
-                        <div className="flex items-center p-6 relative">
+                        <div className="flex items-center p-6 relative z-10">
                             {/* start: atomic animation */}
                             <div className="border-2 border-[#D7D7EB] flex items-center justify-center rounded-full relative before:content-[''] before:absolute before:w-[20px] before:h-[20px] before:bg-water before:rounded-full before:-top-[30px] w-full aspect-square animate-orbit-1">
                                 <div className="border-2 border-[#D7D7EB] flex items-center justify-center rounded-full relative before:content-[''] before:absolute before:w-[20px] before:h-[20px] before:bg-fire before:rounded-full before:-top-[30px] w-[calc(100%-120px)] aspect-square animate-orbit-2">
@@ -134,9 +136,23 @@ const DetailPage = () => {
                                 </div>
                             </div>
                             {/* end: atomic animation */}
-                            <img src={data?.sprites.other['official-artwork']?.front_default} alt={data?.sprites.other['official-artwork']?.front_default} className='z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-xl aspect-square w-[342px]' />
+                            <img src={data?.sprites.other['official-artwork']?.front_default} alt={data?.sprites.other['official-artwork']?.front_default} className='z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-xl aspect-square w-3/4' />
                         </div>
-                        <div>Pokemon Height, Weight and abilities</div>
+                        <div className="relative">
+                            <div className="flex gap-1 p-2 bg-gray-300 rounded-r-full absolute -left-[75px] top-1/2 transform -translate-y-1/2 h-[54%] items-center overflow-hidden w-full z-0 justify-end">
+                                <div className="h-[134%] bg-white rounded-r-[50%] absolute -left-[250px] top-1/2 transform -translate-y-1/2 w-full z-[-1]">
+
+                                </div>
+                                <div className="flex flex-col bg-white rounded-md p-4 aspect-square w-[80px] items-center justify-center">
+                                    <CiLineHeight size={20} />
+                                    {data?.height}
+                                </div>
+                                <div className="flex flex-col bg-white rounded-md p-4 aspect-square w-[80px] items-center justify-center">
+                                    <RiWeightLine size={20} />
+                                    {data?.weight}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 Content Detail Pokemon {pokemonName}

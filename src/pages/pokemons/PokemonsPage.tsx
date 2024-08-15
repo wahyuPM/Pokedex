@@ -41,7 +41,7 @@ const PokemonsPage = () => {
             try {
                 setLoading(true)
                 let newData: Pokemon[] = [];
-                const allData = await Promise.all(url.map(url => fetch(url).then(res => res.json()))); //Promise.all will return error if there is one rejected promise
+                const allData = await Promise.all(url.map(url => fetch(url).then(res => res.json()))); //Promise.all will return error if there is one rejected promise //this will fetch the api paralel
                 if (selectedType.length === 0) {
                     newData = allData[0]?.results ?? []
                 } else {
