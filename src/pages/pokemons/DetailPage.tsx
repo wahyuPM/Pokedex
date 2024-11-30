@@ -1,6 +1,4 @@
-import { useEffect } from "react"
-import { useParams } from "react-router-dom"
-import useFetch from "@/hooks/useFetch"
+import { useLoaderData, useParams } from "react-router-dom"
 import { formatNumber, baseColors } from "@/lib/utils"
 import {
     Tooltip,
@@ -17,17 +15,28 @@ import { WiMoonAltWaxingCrescent2 } from "react-icons/wi"
 import { CiLineHeight } from "react-icons/ci";
 import { RiWeightLine } from "react-icons/ri";
 
+type PokemonData = {
+    id: number;
+    name: string;
+    sprites: {
+        other: {
+            "official-artwork": {
+                front_default: string;
+            };
+        };
+    };
+    types: Array<{
+        type: {
+            name: string;
+        };
+    }>;
+    height: number;
+    weight: number;
+};
+
 const DetailPage = () => {
     const { pokemonName } = useParams()
-
-    const [{ data }, fetchData] = useFetch<any>({
-        method: 'GET',
-        url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-    })
-
-    useEffect(() => {
-        fetchData()
-    }, [fetchData])
+    const data = useLoaderData() as PokemonData
 
     const listIcon = (type: string) => {
         let icon

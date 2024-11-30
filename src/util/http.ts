@@ -21,3 +21,9 @@ export const fetchPokemonDetail = async (url: string) => {
     if (!res.ok) throw new Error('Failed to fetch Pokémon detail data');
     return res.json();
 };
+
+export const fetchPokemonDetailPage = async (pokemonName: string) => {
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    if (!res.ok) throw new Error('Failed to fetch Pokémon detail data');
+    return res.json();
+};
