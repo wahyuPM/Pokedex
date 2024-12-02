@@ -32,8 +32,8 @@ const PokemonsPage = () => {
 
     const { data: allData, isLoading: loadingPokemons } = useQuery({
         queryKey: ['pokemons', urls],
-        queryFn: async () => {
-            const data = await Promise.all(urls.map(fetchPokemons));
+        queryFn: async ({ signal }) => {
+            const data = await Promise.all(urls.map((url) => fetchPokemons({ signal, url })))
             if (selectedType.length === 0) {
                 return data[0]?.results ?? [];
             }
@@ -117,7 +117,7 @@ const PokemonsPage = () => {
                     {!loadingPokemons && filteredPokemons?.length > 0 && (
                         <div className='grid grid-cols-2 md:grid-cols-3 gap-3 auto-rows-[250px] md:auto-rows-auto lg:auto-rows-[180px] min-h-[60vh] xl:min-h-[80vh]'>
                             {getPaginatedData().map((data: Pokemon) => (
-                                <CardComponent key={data.name} url={data.url} name={data.name} />
+                                <CardComponent key={data.name} name={data.name} />
                             ))}
                         </div>
                     )}

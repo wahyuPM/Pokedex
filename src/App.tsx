@@ -25,7 +25,7 @@ const router = createBrowserRouter([
         loader: async ({ params }) => {
           return await queryClient.fetchQuery({
             queryKey: ['pokemonDetail', params.pokemonName],
-            queryFn: () => fetchPokemonDetailPage(params.pokemonName!)
+            queryFn: ({ signal }) => fetchPokemonDetailPage({ signal, pokemonName: params.pokemonName!, withGender: true })
           })
         }
       }

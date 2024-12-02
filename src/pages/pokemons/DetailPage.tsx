@@ -12,8 +12,6 @@ import { IoWater } from "react-icons/io5";
 import { LuMountain } from "react-icons/lu";
 import { BsFillNutFill } from "react-icons/bs";
 import { WiMoonAltWaxingCrescent2 } from "react-icons/wi"
-import { CiLineHeight } from "react-icons/ci";
-import { RiWeightLine } from "react-icons/ri";
 
 type PokemonData = {
     id: number;
@@ -32,6 +30,10 @@ type PokemonData = {
     }>;
     height: number;
     weight: number;
+    gender: {
+        female: number;
+        male: number
+    }
 };
 
 const DetailPage = () => {
@@ -148,17 +150,21 @@ const DetailPage = () => {
                             <img src={data?.sprites.other['official-artwork']?.front_default} alt={data?.sprites.other['official-artwork']?.front_default} className='z-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 drop-shadow-xl aspect-square w-3/4' />
                         </div>
                         <div className="relative">
-                            <div className="flex gap-1 p-2 bg-gray-300 rounded-r-full absolute -left-[75px] top-1/2 transform -translate-y-1/2 h-[54%] items-center overflow-hidden w-full z-0 justify-end">
-                                <div className="h-[134%] bg-white rounded-r-[50%] absolute -left-[250px] top-1/2 transform -translate-y-1/2 w-full z-[-1]">
+                            <div className="rounded-r-full absolute -left-[75px] top-1/2 transform -translate-y-1/2 h-[calc(100%-220px)] items-center overflow-hidden w-[calc(100%+75px)] z-0 border-red-500 border border-l-0 shadow-[0px_0px_29px_10px_#f71b1b3d_inset]">
+                                <div className="h-[134%] bg-white rounded-r-[50%] absolute -left-[310px] top-1/2 transform -translate-y-1/2 w-full z-[-1] border-r border-red-500 shadow-[28px_0px_29px_-21px_#f71b1b3d]">
 
                                 </div>
-                                <div className="flex flex-col bg-white rounded-md p-4 aspect-square w-[80px] items-center justify-center">
+                                {/* <div className="flex flex-col bg-white rounded-md p-4 aspect-square w-[80px] items-center justify-center">
                                     <CiLineHeight size={20} />
                                     {data?.height}
                                 </div>
-                                <div className="flex flex-col bg-white rounded-md p-4 aspect-square w-[80px] items-center justify-center">
+                                <div className="flex flex-col bg-white rounded-md rounded-r-[42%] p-4 aspect-square w-[80px] items-center justify-center">
                                     <RiWeightLine size={20} />
                                     {data?.weight}
+                                </div> */}
+                                <div className="relative h-full w-[calc(100%-75px)] ml-auto">
+                                    {data.gender.female}
+                                    {data.gender.male}
                                 </div>
                             </div>
                         </div>

@@ -9,16 +9,16 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useNavigate } from 'react-router-dom';
-import { fetchPokemonDetail } from '@/util/http';
+import { fetchPokemonDetailPage } from '@/util/http';
 
-const CardComponent: React.FC<Pokemon> = ({ url, name }) => {
+const CardComponent: React.FC<Pokemon> = ({ name }) => {
     const navigate = useNavigate()
 
     const handleOnClickDetail: React.MouseEventHandler<HTMLDivElement> = () => {
         navigate(`${name}`)
     }
 
-    const { data, isLoading } = useQuery({ queryKey: ['pokemonDetail', url], queryFn: async () => fetchPokemonDetail(url) })
+    const { data, isLoading } = useQuery({ queryKey: ['pokemonDetail', name], queryFn: async ({ signal }) => fetchPokemonDetailPage({ signal, pokemonName: name }) })
 
 
     // Get the gradient style based on Pokémon types
