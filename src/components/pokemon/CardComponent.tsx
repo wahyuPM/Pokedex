@@ -18,7 +18,7 @@ const CardComponent: React.FC<Pokemon> = ({ name }) => {
         navigate(`${name}`)
     }
 
-    const { data, isLoading } = useQuery({ queryKey: ['pokemonDetail', name], queryFn: async ({ signal }) => fetchPokemonDetailPage({ signal, pokemonName: name }) })
+    const { data, isLoading } = useQuery({ queryKey: ['pokemonDetail', name], queryFn: async ({ signal }) => fetchPokemonDetailPage({ signal, pokemonName: name }), staleTime: 5 * 60 * 1000 })
 
 
     // Get the gradient style based on Pokémon types

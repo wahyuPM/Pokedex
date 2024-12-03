@@ -41,6 +41,7 @@ const PokemonsPage = () => {
                 item?.pokemon?.map(({ pokemon }) => pokemon) ?? []
             );
         },
+        staleTime: 5 * 60 * 1000,
         placeholderData: keepPreviousData // Keeps data from the previous query while fetching new data
     });
 
