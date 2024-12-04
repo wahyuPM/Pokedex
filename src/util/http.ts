@@ -36,20 +36,64 @@ export const fetchPokemonDetailPage = async ({ signal, pokemonName, withGender =
             if (!speciesRes.ok) throw new Error('Failed to fetch Pokémon species data');
             const speciesData = await speciesRes.json();
 
-            // Calculate gender distribution
+            // Gender rate logic
             const genderRate = speciesData.gender_rate;
             let genderInfo;
+
             if (genderRate === -1) {
+                // Genderless Pokémon
                 genderInfo = { genderless: true };
             } else {
-                const femaleChance = (genderRate / 8) * 100;
-                const maleChance = 100 - femaleChance;
-                genderInfo = { female: femaleChance, male: maleChance };
+                // Calculate male and female chances as percentages
+                const femalePercentage = (genderRate / 8) * 100;
+                const malePercentage = 100 - femalePercentage;
+
+                genderInfo = {
+                    male: `${malePercentage.toFixed()}%`, // One decimal point for better readability
+                    female: `${femalePercentage.toFixed()}%`,
+                };
             }
 
+            // Filter descriptions for specific versions
+            const allowedVersions = ['red', 'yellow', 'gold', 'silver', 'ruby'];
+            const seen = new Set();
+            const filteredDescriptions = speciesData.flavor_text_entries
+                .filter(
+                    (entry: { language: { name: string }; version: { name: string } }) =>
+                        entry.language.name === 'en' && allowedVersions.includes(entry.version.name)
+                )
+                .filter((entry: any) => {
+                    const cleanedText = entry.flavor_text.replace(/\n|\f/g, ' '); // Clean newlines
+                    if (seen.has(cleanedText)) {
+                        return false; // Skip duplicates
+                    }
+                    seen.add(cleanedText);
+                    return true;
+                })
+                .map((entry: any) => ({
+                    text: entry.flavor_text.replace(/\n|\f/g, ' '), // Clean newlines
+                    version: entry.version.name, // Include game version
+                }));
+
+            // Find the English category
+            const pokemonGenera = speciesData.genera.find(
+                (entry: { language: { name: string } }) => entry.language.name === 'en'
+            );
+
+            // Convert height and weight
+            const heightInMeters = pokemonData.height / 10; // From decimeters to meters
+            const weightInKg = pokemonData.weight / 10; // From hectograms to kilograms
+
+            const hatchCounter = speciesData.hatch_counter
+            const eggGroups = speciesData.egg_groups
+
             // Combine and return data
-            return { ...pokemonData, gender: genderInfo };
+            return {
+                ...pokemonData, gender: genderInfo, desc: filteredDescriptions, genera: pokemonGenera, hatchCounter, height: heightInMeters.toFixed(1) + ' m',
+                weight: weightInKg.toFixed(1) + ' kg', eggGroups
+            };
         }
+
 
         return pokemonData
     } catch (error) {

@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 
 import { Pokemon, PokemonType } from '@/lib/interface';
 
@@ -13,10 +14,14 @@ import Combobox from '@/components/ui/combobox';
 import { fetchPokemons, fetchTypes } from '@/util/http';
 
 const PokemonsPage = () => {
-    const [search, setSearch] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    // const [search, setSearch] = useState('');
+    const search = searchParams.get('search') || '';
+    const currentPage = parseInt(searchParams.get('page') || '1', 10);
+    // const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(12);
-    const [selectedType, setSelectedType] = useState<string[]>([]);
+    const [selectedType, setSelectedType] = useState<string[]>(searchParams.get('type')?.trim() ? searchParams.get('type')!.split(',') : []);
     const inputRef = useRef<HTMLInputElement>(null);
 
     // Query to fetch Pokemon types
@@ -24,10 +29,9 @@ const PokemonsPage = () => {
 
     // Build URLs based on selected types
     const urls = useMemo(() => {
-        if (selectedType.length === 0) {
-            return ['https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'];
-        }
-        return selectedType.map(type => `https://pokeapi.co/api/v2/type/${type}`);
+        return selectedType.length
+            ? selectedType.map(type => `https://pokeapi.co/api/v2/type/${type}`)
+            : ['https://pokeapi.co/api/v2/pokemon?limit=2000&offset=0'];
     }, [selectedType]);
 
     const { data: allData, isLoading: loadingPokemons } = useQuery({
@@ -52,32 +56,40 @@ const PokemonsPage = () => {
     }, [allData, search]);
 
     const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
+        // setCurrentPage(pageNumber);
+        setSearchParams({ search, page: String(pageNumber), type: selectedType });
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             const searchValue = inputRef.current?.value || '';
-            setSearch(searchValue);
-            handlePageChange(1);
+            setSearchParams({ search: searchValue, page: '1', type: selectedType })
         }
     };
 
     const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         if (value.length >= 3 || value === '') {
-            setSearch(value);
-            handlePageChange(1);
+            setSearchParams({ search: value, page: '1', type: selectedType })
+
         }
     };
 
     const handleOnChangeType = (currentValue: string) => {
-        handlePageChange(1);
-        setSelectedType((prev) =>
-            prev.includes(currentValue)
+        setSelectedType((prev) => {
+            const updatedSelectedType = prev.includes(currentValue)
                 ? prev.filter((type) => type !== currentValue)
-                : [...prev, currentValue]
-        );
+                : [...prev, currentValue];
+
+            // Update the searchParams with the updated selectedType
+            setSearchParams({
+                search, // Preserve the search query
+                page: '1', // Reset to page 1
+                type: updatedSelectedType.join(','), // Join selected types as a comma-separated string
+            });
+
+            return updatedSelectedType;
+        });
     };
 
     const getPaginatedData = () => {
@@ -101,6 +113,7 @@ const PokemonsPage = () => {
                                 ref={inputRef}
                                 onKeyDown={handleKeyDown}
                                 onChange={handleOnChange}
+                                defaultValue={search}
                             />
                             <Combobox
                                 setSelectedType={handleOnChangeType}
