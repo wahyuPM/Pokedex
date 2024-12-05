@@ -54,15 +54,13 @@ export const fetchPokemonDetailPage = async ({ signal, pokemonName, withGender =
                 };
             }
 
-            // Filter descriptions for specific versions
-            const allowedVersions = ['red', 'yellow', 'gold', 'silver', 'ruby'];
+            // Filter for English descriptions, remove duplicates, and limit to 5 entries
             const seen = new Set();
             const filteredDescriptions = speciesData.flavor_text_entries
-                .filter(
-                    (entry: { language: { name: string }; version: { name: string } }) =>
-                        entry.language.name === 'en' && allowedVersions.includes(entry.version.name)
+                ?.filter((entry: { language: { name: string } }) =>
+                    entry.language.name === 'en' // Only allow English descriptions
                 )
-                .filter((entry: any) => {
+                ?.filter((entry: any) => {
                     const cleanedText = entry.flavor_text.replace(/\n|\f/g, ' '); // Clean newlines
                     if (seen.has(cleanedText)) {
                         return false; // Skip duplicates
@@ -70,10 +68,11 @@ export const fetchPokemonDetailPage = async ({ signal, pokemonName, withGender =
                     seen.add(cleanedText);
                     return true;
                 })
-                .map((entry: any) => ({
-                    text: entry.flavor_text.replace(/\n|\f/g, ' '), // Clean newlines
-                    version: entry.version.name, // Include game version
-                }));
+                ?.slice(0, 5) // Limit to a maximum of 5 descriptions
+                ?.map((entry: any) => ({
+                    text: entry.flavor_text.replace(/\n|\f/g, ' '), // Cleaned text
+                    version: entry.version?.name || 'unknown', // Include game version or fallback to 'unknown'
+                })) || []; // Default to an empty array if no data exists
 
             // Find the English category
             const pokemonGenera = speciesData.genera.find(

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import { useLoaderData, useParams } from "react-router-dom"
 import { formatNumber, baseColors } from "@/lib/utils"
 import {
@@ -13,6 +14,13 @@ import { LuMountain } from "react-icons/lu";
 import { BsFillNutFill } from "react-icons/bs";
 import { WiMoonAltWaxingCrescent2 } from "react-icons/wi"
 import TextLabel from "@/components/pokemon/TextLabel";
+import { cn } from "@/lib/utils";
+import {
+    Carousel, CarouselContent,
+    CarouselItem, type CarouselApi,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay"
+import { Button } from "@/components/ui/button"
 
 interface PokemonData {
     id: number;
@@ -43,12 +51,29 @@ interface PokemonData {
     eggGroups: {
         name: string
         url: string
+    }[],
+    desc: {
+        text: string
+        version: string
     }[]
 }
 
 const DetailPage = () => {
     const { pokemonName } = useParams()
     const data = useLoaderData() as PokemonData
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
+
+    useEffect(() => {
+        if (!api) return;
+
+        // Update the current slide on select
+        const updateCurrent = () => setCurrent(api.selectedScrollSnap());
+        api.on("select", updateCurrent);
+
+    }, [api]);
+
+    console.log(current);
 
     const listIcon = (type: string) => {
         let icon
@@ -150,8 +175,43 @@ const DetailPage = () => {
                             <div className="h-[134%] bg-white rounded-l-[50%] absolute -right-[310px] top-1/2 transform -translate-y-1/2 w-full z-[-1] border-l border-water shadow-[28px_0px_29px_21px_#1b56f73c]">
 
                             </div>
-                            <div className="relative h-full w-[calc(100%-80px)] mr-auto py-10">
-
+                            <div className="relative h-full w-[calc(100%-80px)] mr-auto py-10 pl-8 flex flex-col items-center justify-center gap-4">
+                                <Carousel
+                                    plugins={[
+                                        Autoplay({
+                                            delay: 3000,
+                                        }),
+                                    ]}
+                                    setApi={setApi}
+                                    opts={{
+                                        loop: true,
+                                    }}
+                                    className="w-full">
+                                    <CarouselContent>
+                                        {data.desc.map((value, index) => (
+                                            <CarouselItem key={index} className="flex items-center">
+                                                <div className="p-0">
+                                                    {value.text}
+                                                </div>
+                                            </CarouselItem>
+                                        ))}
+                                    </CarouselContent>
+                                </Carousel>
+                                {/* start: Bullet Navigation */}
+                                <div className=" flex justify-center gap-2">
+                                    {data.desc.map((_, index) => (
+                                        <Button
+                                            key={index}
+                                            size="icon"
+                                            className={cn(
+                                                "bullet",
+                                                current === index && "bullet-active"
+                                            )}
+                                            onClick={() => api?.scrollTo(index)}
+                                        />
+                                    ))}
+                                </div>
+                                {/* end: Bullet Navigation */}
                             </div>
                         </div>
                     </div>

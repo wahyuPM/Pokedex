@@ -1,4 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
+
+/* Inactive bullet */
+.bullet {
+  background-color: #808080;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%; 
+  transition: all 0.3s ease-in-out; 
+  transform: scale(1); 
+}
+
+/* Active bullet */
+.bullet-active {
+  width: 18px; 
+  height: 8px;
+  border-radius: 16px; 
+  transform: scale(1.25); 
+  background-color: black;
+}
